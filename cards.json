@@ -1,0 +1,200 @@
+[
+  {
+    "Emoji": "👩‍🍳/👨‍🍳",
+    "Emoji 1": "👩‍🍳",
+    "Emoji 2": "👨‍🍳",
+    "Color": "Yellow (Professional)",
+    "Mana": "2",
+    "Attack": "2",
+    "Defense": "2",
+    "Rarity": "Low",
+    "Ability": ""
+  },
+  {
+    "Emoji": "👩‍💻/👨‍💻",
+    "Emoji 1": "👩‍💻",
+    "Emoji 2": "👨‍💻",
+    "Color": "Yellow (Professional)",
+    "Mana": "1",
+    "Attack": "2",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": "First strike"
+  },
+  {
+    "Emoji": "👩‍🔬/👨‍🔬",
+    "Emoji 1": "👩‍🔬",
+    "Emoji 2": "👨‍🔬",
+    "Color": "Yellow (Professional)",
+    "Mana": "3",
+    "Attack": "4",
+    "Defense": "2",
+    "Rarity": "Medium",
+    "Ability": ""
+  },
+  {
+    "Emoji": "👩‍✈️/👨‍✈️",
+    "Emoji 1": "👩‍✈️",
+    "Emoji 2": "👨‍✈️",
+    "Color": "Yellow (Professional)",
+    "Mana": "2",
+    "Attack": "2",
+    "Defense": "2",
+    "Rarity": "Medium",
+    "Ability": "Flying"
+  },
+  {
+    "Emoji": "👩‍⚖️/👨‍⚖️",
+    "Emoji 1": "👩‍⚖️",
+    "Emoji 2": "👨‍⚖️",
+    "Color": "Yellow (Professional)",
+    "Mana": "1",
+    "Attack": "1",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🤠/",
+    "Emoji 1": "🤠",
+    "Emoji 2": "",
+    "Color": "Yellow (Professional)",
+    "Mana": "4",
+    "Attack": "5",
+    "Defense": "3",
+    "Rarity": "Rare",
+    "Ability": "Haste"
+  },
+  {
+    "Emoji": "🏌️‍♀️/🏌️‍♂️",
+    "Emoji 1": "🏌️‍♀️",
+    "Emoji 2": "🏌️‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "1",
+    "Attack": "1",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🤽‍♀️/🤽‍♂️",
+    "Emoji 1": "🤽‍♀️",
+    "Emoji 2": "🤽‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "2",
+    "Attack": "2",
+    "Defense": "2",
+    "Rarity": "Low",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🚴‍♀️/🚴‍♂️",
+    "Emoji 1": "🚴‍♀️",
+    "Emoji 2": "🚴‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "3",
+    "Attack": "4",
+    "Defense": "2",
+    "Rarity": "Medium",
+    "Ability": "First strike"
+  },
+  {
+    "Emoji": "⛹️‍♀️/⛹️‍♂️",
+    "Emoji 1": "⛹️‍♀️",
+    "Emoji 2": "⛹️‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "1",
+    "Attack": "1",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": "First strike"
+  },
+  {
+    "Emoji": "🧘‍♀️/🧘‍♂️",
+    "Emoji 1": "🧘‍♀️",
+    "Emoji 2": "🧘‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "4",
+    "Attack": "3",
+    "Defense": "5",
+    "Rarity": "Medium",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🏋️‍♀️/🏋️‍♂️",
+    "Emoji 1": "🏋️‍♀️",
+    "Emoji 2": "🏋️‍♂️",
+    "Color": "Red (Athlete)",
+    "Mana": "5",
+    "Attack": "5",
+    "Defense": "3",
+    "Rarity": "Rare",
+    "Ability": "First strike"
+  },
+  {
+    "Emoji": "🦕",
+    "Emoji 1": "🦕",
+    "Emoji 2": "",
+    "Color": "Purple (Animal)",
+    "Mana": "3",
+    "Attack": "4",
+    "Defense": "2",
+    "Rarity": "Medium",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🦀",
+    "Emoji 1": "🦀",
+    "Emoji 2": "",
+    "Color": "Purple (Animal)",
+    "Mana": "1",
+    "Attack": "1",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": ""
+  },
+  {
+    "Emoji": "🦋",
+    "Emoji 1": "🦋",
+    "Emoji 2": "",
+    "Color": "Purple (Animal)",
+    "Mana": "1",
+    "Attack": "1",
+    "Defense": "1",
+    "Rarity": "Low",
+    "Ability": "Flying"
+  },
+  {
+    "Emoji": "🐌",
+    "Emoji 1": "🐌",
+    "Emoji 2": "",
+    "Color": "Purple (Animal)",
+    "Mana": "4",
+    "Attack": "0",
+    "Defense": "6",
+    "Rarity": "Medium",
+    "Ability": "Defender"
+  },
+  {
+    "Emoji": "🕊",
+    "Emoji 1": "🕊",
+    "Emoji 2": "",
+    "Color": "Purple (Animal)",
+    "Mana": "3",
+    "Attack": "3",
+    "Defense": "3",
+    "Rarity": "Medium",
+    "Ability": "Flying"
+  },
+  {
+    "Emoji": "🦄/",
+    "Emoji 1": "🦄",
+    "Emoji 2": "",
+    "Color": "",
+    "Mana": "5",
+    "Attack": "6",
+    "Defense": "4",
+    "Rarity": "Rare",
+    "Ability": "Flying"
+  }
+]
