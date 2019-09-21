@@ -27,18 +27,31 @@ class Card:
         self.alive = True
         self.turnplayed = turnplayed
 
+        attacked = False
+
         pass
 
 
-    def damage(self, damage_number: int):
+    def damage(self, damaging_card):
+        damage_number = damage_number.attack
+
         if damage_number >= self.defense:
             self.alive = False
+
+            # Assuming no trample for now
+            
+            # if self.ability == "trample":
+            #     playerdamage = self.defense - damage_number
+            # else:
+            #     playerdamage = 0
+            # return playerdamage
+
+            
 
         # return alive
 
 
     def render(self):
-
         attdef = str(self.attack) + "/" + str(self.defense)
 
         card_template = ["  __________________ ",
@@ -46,7 +59,7 @@ class Card:
                          [self.rarity, "left"],
                          ["", ""],
                          ["", ""],
-                         [self.name, "center"],
+                         [self.name, "center", True],
                          ["", ""],
                          ["", ""],
                          ["", ""],
@@ -117,10 +130,11 @@ class Card:
 
         elif position == "" and text == "":
             output = "|"
-            output += " " * (self.width - 2)
+            output += " " * (self.width - 3)
             output += "|"
 
         else:
-            print("oops")
+            print("Error: Something went wrong.")
+            exit()
 
         return output

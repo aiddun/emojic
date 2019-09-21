@@ -21,12 +21,21 @@ class Player:
     
         pass
 
+    def draw(self):
+        topcard = self.deck[-1]
+        self.hand.append(topcard)
+
+        self.deck.pop()
+
+
+    def damage(damage_num: int):
+        self.life -= damage_num
+        
+        pass
+
     def generate_hand(self):
         for i in range(self.gameconfig.handsize):
-            topcard = self.deck[-1]
-            self.hand.append(topcard)
-
-            self.deck.pop()
+            self.draw()
 
             pass
 

@@ -1,4 +1,5 @@
 import os
+from Card import Card
 
 class Screen:
     def __init__(self):
@@ -13,7 +14,7 @@ class Screen:
 
         pass
 
-    def render(self):
+    def refresh(self):
         self.clearscreen()
         for line in self.screen:
             print(''.join(line))
@@ -50,7 +51,8 @@ class Screen:
                 |  __)   | |(_)| || |   | || | ____    | |   | |        
                 | (      | |   | || |   | || | \_  )   | |   | |        
                 | (____/\| )   ( || (___) || (___) |___) (___| (____/   
-                (_______/|/     \|(_______)(_______)\_______/(_______/  """)
+                (_______/|/     \|(_______)(_______)\_______/(_______/  
+                     🤽‍♀️       🐌      🚴‍       🦄       🤠      👩‍🔬 """)
         print("")
         print( "                   The Refactoring")
         print("\n\n")
@@ -75,14 +77,18 @@ class Screen:
         pass
 
 
-    def render_center_text(self, text):
-        y = self.height // 2
+    def render_center_text(self, text, ymargin = 0):
+        # Allow for centered text above or below the absolute center
+        y = self.height // 2 + ymargin
         x = (self.width // 2) - (len(text) // 2)
 
         # x, y - start coordinates of text
         # Assuming horizontal test
 
-        self.render_array([list(text)], x, y)
+        for linenum, line in enumerate(text.split('\n')):
+            self.render_array([list(line)], x, y + linenum)
+
+
         pass
 
     def fancy_input(self):
@@ -109,6 +115,81 @@ class Screen:
     #     players = []
 
     #     for i in range(players):
+
+    def display_player_screen(self, playerlist: list, currentplayerindex: int):
+        self.clearscreen()
+        self.clearbuffer()
+
+        if currentplayerindex == 0:
+            player0turn = True
+            player1turn = False
+        elif currentplayerindex == 1:
+            player0turn = False
+            player1turn = True
+        else:
+            print("Error: Player index out of bounds")
+            exit()
+
+
+        player0view = playerlist[0].render(player0turn)
+        self.render_array(player0view, 0, Card.height + 1)
+
+        player1view = playerlist[0].render(player1turn)
+        self.render_array(player1view, self.width - len(player1view[0]) - 1 - 5, 0)
+
+        # self.Screen.render_array(playerlist[1].render(True))
+
+        self.render_center_text("enter 'help' for command help", self.height // 2 - 1)
+
+        self.refresh()
+
+        pass
+
+    def display_prompt(self, prompt_text):
+        self.clearscreen()
+        self.clearbuffer()
+
+        self.render_center_text(prompt_text)
+        self.render_center_text("Press ENTER to Continue", 4)
+
+        self.refresh()
+
+        input()
+
+        pass
+
+    def display_help(self):
+        self.clearscreen()
+        self.clearbuffer()
+
+        helptext = \
+        """
+        Help:
+
+        \033[1mAttacking:\033[0m
+
+        fight:
+        \x1B[3m attacks opponent with card \x1B[23m
+        attack {card number} 
+
+        \033[1mDefending:\033[0m
+
+        block:
+        \x1B[3m block player attack with card \x1B[23m
+        block {card number}
+
+
+
+
+
+        press ENTER to continue
+        """
+
+
+        self.render_center_text(helptext)
+        self.refresh()
+
+        pass
 
 
 
