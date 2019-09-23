@@ -16,6 +16,6 @@
                    A terminal card game
 ```
 
-Work in progress, almost done.
+Work in progress, almost done. Rendering engine written from scratch!
 
 To play: ```$ python play.py```
