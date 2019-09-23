@@ -62,7 +62,7 @@ class Screen:
     # Polymorphism for screen as well as utility functions for subrendering.
 
 
-    def render_array(self, input_array, startx, starty):
+    def render_array_to_screen(self, input_array, startx, starty):
         for y in range(len(input_array)):
             for x in range(len(input_array[0])):
                 self.screen[starty + y][startx + x] = input_array[y][x]
@@ -72,7 +72,7 @@ class Screen:
     def render_text(self, text, x, y):
         # x, y - start coordinates of text
         # Assuming horizontal test
-        self.render_array([list(text)], x, y)
+        self.render_array_to_screen([list(text)], x, y)
 
         pass
 
@@ -86,7 +86,7 @@ class Screen:
         # Assuming horizontal test
 
         for linenum, line in enumerate(text.split('\n')):
-            self.render_array([list(line)], x, y + linenum)
+            self.render_array_to_screen([list(line)], x, y + linenum)
 
 
         pass
@@ -116,30 +116,44 @@ class Screen:
 
     #     for i in range(players):
 
-    def display_player_screen(self, playerlist: list, currentplayerindex: int):
+    def display_player_screen(self, playerlist: list, error=False):
         self.clearscreen()
         self.clearbuffer()
 
-        if currentplayerindex == 0:
-            player0turn = True
-            player1turn = False
-        elif currentplayerindex == 1:
-            player0turn = False
-            player1turn = True
+
+        for player in playerlist:
+            if player.turn:
+                hand_view = player.render_cards(player.hand)
+                self.render_array_to_screen(hand_view, 0, self.height - Card.height - 4)
+
+                battlefield_view = player.render_cards(player.battlefield)
+
+                # Only try to render battlefield view if there is one (cards on battlefield)
+                if battlefield_view:
+                    # Calculate offset for battlefield 6 spaces after the hand before rendering battlefields
+                    battlefield_x_offset = self.width - len(battlefield_view[0]) - 1 - 5
+
+                    self.render_array_to_screen(battlefield_view, battlefield_x_offset, self.height - Card.height - 4)
+
+            elif not player.turn:
+                battlefield_view = player.render_cards(player.battlefield)
+
+                # Only try to render battlefield view if there is one (cards on battlefield)
+                if battlefield_view:
+                    battlefield_x_offset = self.width - len(battlefield_view[0]) - 1 - 5
+
+                    self.render_array_to_screen(battlefield_view, battlefield_x_offset, 3)
+
+        # player1view = playerlist[0].render(player1turn)
+        # self.render_array_to_screen(player1view, , 0)
+
+        # self.Screen.render_array_to_screen(playerlist[1].render(True))
+
+
+        if error:
+            self.render_center_text("invalid command. please try again or enter 'help' for command help", self.height // 2 - 1)
         else:
-            print("Error: Player index out of bounds")
-            exit()
-
-
-        player0view = playerlist[0].render(player0turn)
-        self.render_array(player0view, 0, Card.height + 1)
-
-        player1view = playerlist[0].render(player1turn)
-        self.render_array(player1view, self.width - len(player1view[0]) - 1 - 5, 0)
-
-        # self.Screen.render_array(playerlist[1].render(True))
-
-        self.render_center_text("enter 'help' for command help", self.height // 2 - 1)
+            self.render_center_text("enter 'help' for command help", self.height // 2 - 1)
 
         self.refresh()
 
@@ -168,6 +182,10 @@ class Screen:
 
         \033[1mAttacking:\033[0m
 
+        play:
+        \x1B[3m summons card to battlefield with mana\x1B[23m
+        play {card number}
+
         fight:
         \x1B[3m attacks opponent with card \x1B[23m
         attack {card number} 
@@ -177,8 +195,6 @@ class Screen:
         block:
         \x1B[3m block player attack with card \x1B[23m
         block {card number}
-
-
 
 
 

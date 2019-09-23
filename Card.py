@@ -5,7 +5,7 @@ class Card:
     #   I was considering implementing cards with heavy OOP, maybe using multiple inheritance, but since moves/priority in this game are decided at run time (i.e. two person battles), I'd rather just have a list of abilities or something.
 
     # Static render information
-    height = 18
+    height = 16
     width = 22
 
     def __init__(self, name: str, emoji1: str, emoji2: str, color: str, mana: int, attack: int, defense: int, rarity: str, ability, turnplayed=-1):
@@ -27,9 +27,11 @@ class Card:
         self.alive = True
         self.turnplayed = turnplayed
 
-        attacked = False
+        tapped = False
 
         pass
+
+
 
 
     def damage(self, damaging_card):
@@ -51,7 +53,7 @@ class Card:
         # return alive
 
 
-    def render(self):
+    def render(self, index):
         attdef = str(self.attack) + "/" + str(self.defense)
 
         card_template = ["  __________________ ",
@@ -68,7 +70,7 @@ class Card:
                          ["", ""],
                          ["", ""],
                          ["", ""],
-                         [attdef, "right"],
+                         [str(index), "leftright", False, attdef],
                          " \\___________________/"
                          ]
                          
@@ -99,9 +101,9 @@ class Card:
         return card_template
 
     
-    def render_card_line(self, text: str, position: str, emoji=False):
+    def render_card_line(self, text: str, position: str, emoji=False, optleft=" "):
         # Could be faster with fixed-length arrays but this is more legible and it's neglegable at this scale
-        
+
         if emoji:
             # Problem with emoji text inferences in Python
             textlen = 1
@@ -123,8 +125,16 @@ class Card:
 
         elif position == "right":
             output = "|"
-            output += " " * (self.width - 1 - 2 - textlen)
+            output += " " * (self.width - 1 - 1 - textlen)
             output += str(text)
+            output += " " * 1
+            output += "|"
+
+        elif position == "leftright":
+            output = "|  "
+            output += str(text)
+            output += " " * (self.width - 1 - 1 - textlen - len(optleft) - 2)
+            output += str(optleft)
             output += " " * 1
             output += "|"
 
