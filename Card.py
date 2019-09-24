@@ -1,5 +1,6 @@
 import random
 
+
 class Card:
 
     #   I was considering implementing cards with heavy OOP, maybe using multiple inheritance, but since moves/priority in this game are decided at run time (i.e. two person battles), I'd rather just have a list of abilities or something.
@@ -9,8 +10,8 @@ class Card:
     width = 22
 
     def __init__(self, name: str, emoji1: str, emoji2: str, color: str, mana: int, attack: int, defense: int, rarity: str, ability, turnplayed=-1):
-    
-        # Final 
+
+        # Final
         if emoji2 == "":
             self.name = emoji1
         else:
@@ -31,9 +32,6 @@ class Card:
 
         pass
 
-
-
-
     def damage(self, damaging_card):
         damage_number = damage_number.attack
 
@@ -41,17 +39,14 @@ class Card:
             self.alive = False
 
             # Assuming no trample for now
-            
+
             # if self.ability == "trample":
             #     playerdamage = self.defense - damage_number
             # else:
             #     playerdamage = 0
             # return playerdamage
 
-            
-
         # return alive
-
 
     def render(self, index):
         attdef = str(self.attack) + "/" + str(self.defense)
@@ -73,10 +68,10 @@ class Card:
                          [str(index), "leftright", False, attdef],
                          " \\___________________/"
                          ]
-                         
+
         for i, line in enumerate(card_template):
             if type(line) == list:
-            # and len(line) == 0:
+                # and len(line) == 0:
                 card_template[i] = self.render_card_line(*line)
 
             card_template[i] = list(card_template[i])
@@ -97,10 +92,8 @@ class Card:
 # |               {attdef}      |
 # \\___________________/"""
 
-
         return card_template
 
-    
     def render_card_line(self, text: str, position: str, emoji=False, optleft=" "):
         # Could be faster with fixed-length arrays but this is more legible and it's neglegable at this scale
 
@@ -109,7 +102,7 @@ class Card:
             textlen = 1
         else:
             textlen = len(text)
-        
+
         if position == "center":
             output = "|"
             output += " " * ((self.width // 2) - (textlen // 2 + 1) - 1)

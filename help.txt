@@ -1,0 +1,30 @@
+Help:
+
+Attacking:
+
+play:
+   summons card to battlefield with mana.
+play {card number}
+
+
+attack:
+   attacks opponent with card
+attack {card number} 
+
+
+
+Defending:
+
+block:
+   block player attack with card
+block {card number}
+
+
+
+Other:
+
+quit:
+   quit the game
+quit
+
+press ENTER to continue

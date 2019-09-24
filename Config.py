@@ -1,6 +1,7 @@
 import json
 from Card import Card
 
+
 class Config:
 
     handsize = 3
@@ -9,8 +10,7 @@ class Config:
         "Low": 3,
         "Medium": 2,
         "Rare": 1,
-        }
-
+    }
 
     def __init__(self):
         self.cards = []

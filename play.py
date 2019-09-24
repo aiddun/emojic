@@ -1,5 +1,6 @@
 from Game import *
 
+
 def main():
     game = Game()
     game.Screen.splash_screen()

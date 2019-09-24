@@ -2,6 +2,7 @@ from Card import Card
 import random
 import ScreenTools
 
+
 class Player:
 
     def __init__(self, name: str, config):
@@ -20,7 +21,7 @@ class Player:
         self.generate_deck()
         self.generate_hand()
 
-        turn = False
+        self.turn = False
 
         self.max_mana = 1
         self.spendable_mana = 1
@@ -43,10 +44,9 @@ class Player:
 
         self.deck.pop()
 
-
     def damage(damage_num: int):
         self.life -= damage_num
-        
+
         pass
 
     def generate_hand(self):
@@ -54,7 +54,6 @@ class Player:
             self.draw()
 
             pass
-
 
     def generate_deck(self):
         for card in self.gameconfig.cards:
@@ -64,37 +63,39 @@ class Player:
 
                 pass
 
-
-    def render_cards(self, cards):
+    def render_cards(self, cards, startval=0):
 
         cardnum = len(cards)
 
         if not cardnum:
             return
 
-        renderwidth  = (cardnum * Card.width) + (self.spacesize * (cardnum - 1))
+        renderwidth = (cardnum * Card.width) + (self.spacesize * (cardnum - 1))
         renderheight = Card.height + 2
 
-        player_screen_buffer = ScreenTools.generate_screen_buffer(renderheight, renderwidth + 1)
+        player_screen_buffer = ScreenTools.generate_screen_buffer(
+            renderheight, renderwidth + 1)
 
         currentx = 2
         currenty = 1
 
-        for i, card in enumerate(self.hand):
-            # print(f"i: {i}")
+        handsize = len(self.hand)
 
-            player_screen_buffer = ScreenTools.render_array_in_array(player_screen_buffer, card.render(i), currentx, currenty)
-            currentx += Card.width + self.spacesize
+        for i, card in enumerate(self.hand):
+            player_screen_buffer = ScreenTools.render_array_in_array(
+                player_screen_buffer, card.render(i + startval), currentx, currenty)
+
+            if not i >= handsize - 1:
+                currentx += Card.width + self.spacesize
 
         # Render player health
 
         return player_screen_buffer
 
-
-    # def 
+    # def
     #     healthtext = "Health:  {}".format(self.life)
 
     #     if turn:
     #         player_screen_buffer = ScreenTools.render_text(player_screen_buffer, healthtext, renderwidth, renderheight - 2)
     #     else:
-    #         player_screen_buffer = ScreenTools.render_text(player_screen_buffer, healthtext, renderwidth - 10, 0)        
+    #         player_screen_buffer = ScreenTools.render_text(player_screen_buffer, healthtext, renderwidth - 10, 0)
