@@ -1,11 +1,7 @@
 def render_array_in_array(original_array, input_array, startx, starty):
-    # print(len(input_array))
-    # print(len(input_array[0]))
 
     for y in range(len(input_array)):
-        # print(f'outlen + {len(original_array[0])}')
 
-        # print(f'inlen + {len(input_array[0])}')
         if starty + y > len(original_array):
             continue
 
@@ -15,8 +11,6 @@ def render_array_in_array(original_array, input_array, startx, starty):
                 continue
 
             original_array[starty + y][startx + x] = input_array[y][x]
-
-    # print("card done")
 
     return original_array
 

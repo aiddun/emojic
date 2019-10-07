@@ -1,9 +1,11 @@
 import random
-
+import ScreenTools
 
 class Card:
-
-    #   I was considering implementing cards with heavy OOP, maybe using multiple inheritance, but since moves/priority in this game are decided at run time (i.e. two person battles), I'd rather just have a list of abilities or something.
+    #   I was considering implementing cards with heavy OOP, maybe using multiple inheritance,
+    #   but since moves/priority (first strike) in this game are decided at run time and
+    #   a card's battle methods have to modify both cards' states, (i.e. two person battles),
+    #   I'd rather just have a list of abilities or something.
 
     # Static render information
     height = 16
@@ -28,15 +30,25 @@ class Card:
         self.alive = True
         self.turnplayed = turnplayed
 
-        tapped = False
+        self.tapped = False
+
+        self.player = None
 
         pass
 
-    def damage(self, damaging_card):
-        damage_number = damage_number.attack
+    def damage(self, thingwithlife):
+        damage_number = self.attack
 
-        if damage_number >= self.defense:
-            self.alive = False
+        # Thank you dynamic typing, very cool
+        thingtype = type(thingwithlife)
+
+        # I can't just make two methods with common signatures for both because
+        # I need to set the card alive state to false if it dies
+        if thingtype == Card:
+            if damage_number >= thingwithlife.defense:
+                thingwithlife.alive = False
+        elif thingtype == Player:
+            thingwithlife.life -= damage_number
 
             # Assuming no trample for now
 
@@ -47,27 +59,36 @@ class Card:
             # return playerdamage
 
         # return alive
+        
+        pass
 
     def render(self, index):
         attdef = str(self.attack) + "/" + str(self.defense)
 
         card_template = ["  __________________ ",
-                         " /                  \\",
-                         [self.rarity, "left"],
-                         ["", ""],
-                         ["", ""],
-                         [self.name, "center", True],
-                         ["", ""],
-                         ["", ""],
-                         ["", ""],
-                         ["", ""],
-                         [self.ability, "center"],
-                         ["", ""],
-                         ["", ""],
-                         ["", ""],
-                         [str(index), "leftright", False, attdef],
-                         " \\___________________/"
-                         ]
+                                 " /                  \\",
+                                 [self.rarity, "left"],
+                                 ["", ""],
+                                 ["", ""],
+                                 [self.name, "center", True],
+                                 ["", ""],
+                                 ["", ""],
+                                 ["", ""],
+                                 ["", ""],
+                                 [self.ability, "center"],
+                                 ["", ""],
+                                 ["", ""],
+                                 ["", ""],
+                                 [str(index), "leftright", False, attdef],
+                                 " \\___________________/"
+                                 ]
+
+
+        card_tapped_mask = [["\   "],
+                            [" \\"],
+                            ["  \\"],
+                            ["   \\"]]
+
 
         for i, line in enumerate(card_template):
             if type(line) == list:
@@ -76,21 +97,9 @@ class Card:
 
             card_template[i] = list(card_template[i])
 
-# f""""___________________
-# /                {self.rarity}   \\
-# |                     |
-# |                     |
-# |         {self.name}        |
-# |                     |
-# |                     |
-# |                     |
-# |                     |
-# |         {self.ability}           |
-# |                     |
-# |                     |
-# |                     |
-# |               {attdef}      |
-# \\___________________/"""
+        if self.tapped:
+            maskx = len(card_template[0]) - len(card_tapped_mask[0])
+            card_template = ScreenTools.render_array_in_array(card_template, card_tapped_mask, maskx, 0)
 
         return card_template
 
@@ -141,3 +150,44 @@ class Card:
             exit()
 
         return output
+
+    def battle(self, def_card, turn):
+        # Haste
+
+        if len(def_card.player.battlefield) == 0:
+            self.damage(def_card.player)
+
+        if self.turnplayed == turn:
+            if self.ability == "Haste":
+                self.damage(def_card)
+                def_card.damage(self)
+            else:
+                # Can't attack turn it's played
+                return "Card can't attack turned played"
+
+        if "First strike" == self.ability:
+            #  First strike assumes that the attacking card will attack
+            self.damage(def_card)
+
+            if def_card.alive:
+                def_card.damage(self)
+
+        elif "Flying" == self.ability:
+            if "Flying" == def_card.ability:
+                self.damage(def_card)
+                def_card.damage(self)
+
+            else:
+                def_card.player.life -= self.attack
+
+        # Defender can't attack
+        elif "Defender" == self.ability:
+            return "Defender cards can't attack"
+
+        else:
+            self.damage(def_card)
+            def_card.damage(self)
+
+        self.tapped = True
+        return True
+

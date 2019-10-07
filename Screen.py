@@ -63,7 +63,7 @@ class Screen:
 | (      | |   | || |   | || | \_  )   | |   | |        
 | (____/\| )   ( || (___) || (___) |___) (___| (____/   
 (_______/|/     \|(_______)(_______)\_______/(_______/  
-    🤽‍♀️       🐌      🚴‍       🦄       🤠      👩‍🔬 """, -6)
+  🤽‍♀️       🐌      🚴‍       🦄       🤠      👩‍🔬 """, -6)
         self.render_center_text("The Refactoring", 5)
         self.render_center_text("Press Enter to continue", 8)
 
@@ -76,8 +76,6 @@ class Screen:
                 continue
 
             for x in range(len(input_array[0])):
-                print(startx)
-                print(starty + y, startx + x)
                 if startx + x >= len(self.screen[0]) - 1:
                     continue
 
@@ -134,49 +132,23 @@ class Screen:
 
     #     for i in range(players):
 
-    def display_player_screen(self, playerlist: list, error=False):
+
+    def display_player_screen(self, playerlist: list, error=False, error_text=""):
         self.clearscreen()
         self.clearbuffer()
 
-        # Keep index for all possible cards a player can choose
+        # Keep track of an index such that we can map each card to an index on the board
         cardindexoffset = 0
 
-        for player in playerlist:
+        # Render current player first so index format is always consistant
+        for i, player in enumerate(playerlist):
             if player.turn:
+                cardindexoffset = self.render_current_player(player, cardindexoffset)
+                break
 
-                # Render hand
-                hand_view = player.render_cards(player.hand, cardindexoffset)
-                self.render_array(hand_view, 0, self.height - Card.height - 4)
-                cardindexoffset += len(player.hand)
+        otherplayerindex = i ^ 1
 
-                # Add hand caption
-                self.render_text("Hand", len(
-                    hand_view[0]) // 2, self.height - 2)
-
-                # Render current player battlefield
-                battlefield_view = player.render_cards(
-                    player.battlefield, cardindexoffset)
-
-                # Only try to render battlefield view if there is one (cards on battlefield)
-                if battlefield_view:
-                    # Calculate offset for battlefield 6 spaces after the hand before rendering battlefields
-                    battlefield_x_offset = self.width - \
-                        len(battlefield_view[0]) - 1 - 10
-                    self.render_array(
-                        battlefield_view, battlefield_x_offset, self.height - Card.height - 4)
-                    cardindexoffset += len(player.battlefield)
-
-            elif not player.turn:
-                battlefield_view = player.render_cards(
-                    player.battlefield, cardindexoffset)
-
-                # Only try to render battlefield view if there is one (cards on battlefield)
-                if battlefield_view:
-                    battlefield_x_offset = self.width - \
-                        len(battlefield_view[0]) - 1 - 10
-                    self.render_array(battlefield_view,
-                                      battlefield_x_offset, 3)
-                    cardindexoffset += len(player.battlefield)
+        self.render_other_player(playerlist[otherplayerindex], cardindexoffset)
 
         # player1view = playerlist[0].render(player1turn)
         # self.render_array(player1view, , 0)
@@ -190,9 +162,54 @@ class Screen:
             self.render_center_text(
                 "enter 'help' for command help", self.height // 2 - 1)
 
+        if error_text:
+            self.render_center_text(error_text, (self.height // 2) - 2)
+
         self.refresh()
 
         pass
+
+    def render_current_player(self, player, cardindexoffset):
+        # Render hand
+        hand_view = player.render_cards(player.hand, cardindexoffset)
+        self.render_array(hand_view, 0, self.height - Card.height - 4)
+
+        # Keep track of an index such that we can map each card to an index on the board
+        cardindexoffset += len(player.hand)
+
+        # Add hand caption
+        self.render_text("Hand", len(
+            hand_view[0]) // 2, self.height - 3)
+        self.render_text("{}".format(player.name), len(
+            hand_view[0]) // 2, self.height - 2)
+
+        # Render current player battlefield
+        battlefield_view = player.render_cards(
+            player.battlefield, cardindexoffset)
+
+        # Only try to render battlefield view if there is one (cards on battlefield)
+        if battlefield_view:
+            # Calculate offset for battlefield 6 spaces after the hand before rendering battlefields
+            battlefield_x_offset = self.width - len(battlefield_view[0]) - 1 - 10
+            self.render_array(
+                battlefield_view, battlefield_x_offset, self.height - Card.height - 4)
+            cardindexoffset += len(player.battlefield)
+
+        return cardindexoffset
+
+    def render_other_player(self, player, cardindexoffset):
+        battlefield_view = player.render_cards(
+            player.battlefield, cardindexoffset)
+
+        # Only try to render battlefield view if there is one (cards on battlefield)
+        if battlefield_view:
+            battlefield_x_offset = self.width - \
+                                   len(battlefield_view[0]) - 1 - 10
+            self.render_array(battlefield_view,
+                              battlefield_x_offset, 3)
+            cardindexoffset += len(player.battlefield)
+
+        return cardindexoffset
 
     def display_prompt(self, prompt_text):
         self.clearscreen()

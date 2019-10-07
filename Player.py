@@ -34,9 +34,16 @@ class Player:
         self.max_mana += 1
         self.spendable_mana = self.max_mana
 
+        for card in self.battlefield:
+            card.tapped = False
+
     def play(self, index):
+        if index >= len(self.hand):
+            return False
+
         self.battlefield.append(self.hand[index])
         self.hand.pop(index)
+        return True
 
     def draw(self):
         topcard = self.deck[-1]
@@ -57,15 +64,20 @@ class Player:
 
     def generate_deck(self):
         for card in self.gameconfig.cards:
+            card.player = self
             for cardfreq in range(self.gameconfig.rarity_config[card.rarity]):
                 self.deck.append(card)
                 random.shuffle(self.deck)
 
                 pass
 
+
+
     def render_cards(self, cards, startval=0):
 
         cardnum = len(cards)
+
+        print(cardnum)
 
         if not cardnum:
             return
@@ -79,13 +91,11 @@ class Player:
         currentx = 2
         currenty = 1
 
-        handsize = len(self.hand)
-
-        for i, card in enumerate(self.hand):
+        for i, card in enumerate(cards):
             player_screen_buffer = ScreenTools.render_array_in_array(
                 player_screen_buffer, card.render(i + startval), currentx, currenty)
 
-            if not i >= handsize - 1:
+            if not i >= cardnum - 1:
                 currentx += Card.width + self.spacesize
 
         # Render player health

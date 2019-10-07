@@ -36,16 +36,18 @@ class Game:
             self.playerlist[turn_index].turn = True
             self.playerlist[turn_index ^ 1].turn = False
 
-            loopcompleted = False
-            looperror = False
+            loop_completed = False
+            loop_error = False
 
-            while not loopcompleted:
+            error_text = ""
 
-                self.Screen.display_player_screen(self.playerlist, looperror)
+            while not loop_completed:
+
+                self.Screen.display_player_screen(self.playerlist, loop_error, error_text)
                 command_input = self.Screen.fancy_input()
 
                 if not command_input:
-                    looperror = True
+                    loop_error = True
                     continue
 
                 splitargs = command_input.lower().split()
@@ -53,22 +55,96 @@ class Game:
 
                 if firstarg == "help":
                     commandinput = self.Screen.display_help()
-                    continue
 
                 elif firstarg == "play":
                     if len(splitargs) != 2:
-                        looperror = True
+                        loop_error = True
+                        error_text = "play accepts 1 argument"
                         continue
                     else:
                         index = splitargs[1]
-                        self.playerlist[turn_index].play(int(index))
-                        loopcompleted = True
+
+                        if not self.is_int(index):
+                            loop_error = True
+                            error_text = "invalid card index type"
+                            continue
+                        else:
+                            index = int(index)
+
+                        loop_completed = self.playerlist[turn_index].play(index)
+
+                elif firstarg == "battle":
+                    if len(splitargs) != 3:
+                        loop_error = True
+                        error_text = "battle accepts 2 arguments"
+                    continue
+
+                    att_index = splitargs[1]
+                    if not self.is_int(att_index):
+                        loop_error = True
+                        error_text = "invalid card index type"
                         continue
 
+                    att_index = int(att_index)
+
+                    def_index = splitargs[2]
+                    if not self.is_int(def_index):
+                        loop_error = True
+                        error_text = "invalid card index type"
+                        continue
+
+                    def_index = int(def_index)
+
+                    current_player_hand_len = len(self.playerlist[turn_index].hand)
+                    current_player_battlefield_len = len(self.playerlist[turn_index].battlefield)
+
+                    current_player_start_index = current_player_hand_len
+                    current_player_end_index = current_player_start_index + current_player_battlefield_len + 1
+
+                    if not (current_player_start_index <= att_index and att_index <= current_player_end_index):
+                        loop_error = True
+                        error_text = "invalid attacking card index"
+                        continue
+
+                    other_player_battlefield_len = len(self.playerlist[int(not turn_index)].battlefield)
+
+                    other_player_start_index = current_player_end_index
+                    other_player_end_index = other_player_start_index + other_player_battlefield_len + 1
+
+                    if not (other_player_start_index <= def_index and def_index < other_player_end_index):
+                        loop_error = True
+                        error_text = "invalid defending card index"
+                        continue
+
+                    att_card = self.playerlist[turn_index].battlefield[att_index - current_player_start_index]
+                    def_card = self.playerlist[self.other_player(turn_index)].battlefield[def_index - other_player_start_index]
+
+                    battleresult = att_card.battle(def_card)
+                    if battleresult == True:
+                        loop_completed == True
+                    else:
+                        error_text = battleresult
+
+                    exit()
                 elif firstarg == "quit":
                     self.Screen.clearscreen()
                     print("Thank you for playing emojic.")
                     exit()
+
+                else:
+                    loop_error = True
+                    continue
+
+                # Refresh board and check if any cards have died or players have lost
+                player_lost = self.tick()
+
+                if player_lost:
+                    self.Screen.clearscreen()
+                    winner_index = self.other_player(player_lost)
+                    self.screen.render_center_text("Player {num} ({name}) wins!".format(num=winner_index, name=self.playerlist[winner_index].name))
+                    print("Thank you for playing emojic.")
+                    exit()
+
 
                 # else if firstarg == "attack":
 
@@ -77,28 +153,39 @@ class Game:
             # Invert index (0 -> 1, 1 -> 0) with xor (1)
             turn_index = turn_index ^ 1
 
-    def command_help(self, turn_index, error=False):
+    def other_player(self, i):
+        return i ^ 1
 
+    def command_play(self, args):
         pass
+
+    def is_int(self, thing):
+        try:
+            _ = int(thing)
+        except ValueError:
+            return False
+        else:
+            return True
+
 
     def tick(self):
         for playernum, player in enumerate(self.playerlist):
             if player.life <= 0:
                 # Line assumes two players
                 self.lose(playernum)
-                return False
+                return playernum
 
             # Can't draw
             if len(player.deck) == 0 and player.turn:
                 self.lose(playernum)
-                return False
+                return playernum
 
             for i, card in enumerate(player.deck):
                 if not card.alive:
                     self.playerlist[playernum].graveyard.append(card)
                     self.playerlist[playernum].deck.pop(i)
 
-            return True
+            return 0
 
     def load_cards(self):
         with open('cards.json', 'r') as cards:
@@ -126,67 +213,3 @@ class Game:
             Player(player1_name, self.config),
             Player(player2_name, self.config)
         ]
-
-    def battle(self, att_player_index, att_card_index, def_player_index, def_card_index):
-        # Returns true if attack was successful
-
-        # Can't refence specific card because
-        att_player = self.playerlist[att_player_index]
-        def_player = self.playerlist[def_player_index]
-
-        attacking_deck = self.playerlist[att_player_index].deck
-        defending_deck = self.playerlist[def_player_index].deck
-
-        if attacking_deck[att_card_index].tapped:
-            return False
-
-        # Haste
-        if attacking_deck.turnplayed == self.turn:
-            if attacking_deck[att_card_index].ability == "Haste":
-                defending_deck[def_card_index].damage(
-                    attacking_deck[att_card_index])
-                attacking_deck[att_card_index].damage(
-                    defending_deck[def_card_index])
-
-                return True
-            else:
-                # Can't attack turn it's played
-                return False
-
-        if "First strike" == attacking_deck[att_card_index].ability:
-            #  First strike assumes that the attacking card will attack
-            defending_deck[def_card_index].damage(
-                attacking_deck[att_card_index])
-
-            if not defending_deck[def_card_index].alive:
-                return True
-
-            else:
-                attacking_deck[att_card_index].damage(
-                    defending_deck[def_card_index])
-                return True
-
-        elif "Flying" == attacking_deck[att_card_index].ability:
-
-            if "Flying" == defending_deck[def_card_index].ability:
-                defending_deck[def_card_index].damage(
-                    attacking_deck[att_card_index])
-                attacking_deck[att_card_index].damage(
-                    defending_deck[def_card_index])
-                return True
-
-            else:
-                defending_player.life -= attacking_deck[att_card_index].attack
-                return True
-
-        # Defender can't attack
-        elif "Defender" == attacking_deck[att_card_index].ability:
-            return False
-
-        else:
-            defending_deck[def_card_index].damage(
-                attacking_deck[att_card_index])
-            attacking_deck[att_card_index].damage(
-                defending_deck[def_card_index])
-
-            return True
